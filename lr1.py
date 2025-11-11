@@ -12,9 +12,10 @@ if len(temperatures) == 0 or len(temperatures) > 24:
     exit()
 else:
     for t in temperatures:
-         if t < -40 and t > 40:
+        value = float(t)
+        if value > -40 and value < 40:
             norms = False
-         else:
+        else:
             print("Температурні покази не в межах норми.")
 
 
