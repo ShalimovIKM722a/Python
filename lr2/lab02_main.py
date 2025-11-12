@@ -20,40 +20,45 @@ def create_data_dict(temp_list, hum_list, pres_list):
         time = f"T{i+1}"
         data_dict["temperature"][time] = temp_list[i]
         data_dict["humidity"][time] = hum_list[i]
-        data_dict["pressure"][time] = pres_list[i]
-
+        data_dict["pressure"][time] = pres_list[i]\
+    
+    return data_dict
 
 def process_measurements(title, data_dict, threshold):
     print ("=== Обробка показників для:", title)
+    value = list(data_dict[title].values())
     sm.show_table(data_dict, title)
-    avgTemp, avgHum, avgPres = sm.get_average(data_dict)
-    print (f"\nСередні значення - Температура: {avgTemp:.2f}, Вологість: {avgHum:.2f}, Тиск: {avgPres:.2f}")
-    minTemp, minHum, minPres = sm.get_min(data_dict)
-    print (f"Мінімальні значення - Температура: {minTemp:.2f}, Вологість: {minHum:.2f}, Тиск: {minPres:.2f}")
-    maxTemp, maxHum, maxPres = sm.get_max(data_dict)
-    print (f"Максимальні значення - Температура: {maxTemp:.2f}, Вологість: {maxHum:.2f}, Тиск: {maxPres:.2f}")
-    medTemp, medHum, medPres = sm.get_median(data_dict)
-    print (f"Медіанні значення - Температура: {medTemp:.2f}, Вологість: {medHum:.2f}, Тиск: {medPres:.2f}")
-    jumps = sm.find_jumps(data_dict, threshold)
-    print ("\nВиявлені стрибки значень (поріг:", threshold, "):")
+    avg = sm.get_average(value)
+    print (f"\nСередні значення: {avg:.2f}")
+    min = sm.get_min(value)
+    print (f"Мінімальні значення: {min:.2f}")
+    max = sm.get_max(value)
+    print (f"Максимальні значення: {max:.2f}")
+    med = sm.get_median(value)
+    print (f"Медіанні значення: {med:.2f}")
+    
+    #match title:
+    #   case "temperature":
+    #       jumps = sm.find_jumps(data_dict, 7)
+    #       print(f" ")
+    #    case "humidity":
+    #       jumps = sm.find_jumps(data_dict, 20)
+    #   case "pressure":
+    #       pressure = sm.find_jumps(data_dict, 5000)
 
 def main():
     print("=== Обробка показів системи 'Розумний будинок' ===")
     temperature_input = input("Введіть показники температури (через пробіл): ")
     humidity_input = input("Введіть показники вологості (через пробіл): ")
     pressure_input = input("Введіть показники тиску (через пробіл): ")
-    thresholdTemp = 7.0
-    thresholdHum = 20.0
-    thresholdPres = 5000
-    temp_list = parse_input(temperature_input)
+    threshold = input("Введіть критичний стрибок") 
+    title = input("Введіть")
     temp_list = parse_input(temperature_input)
     hum_list = parse_input(humidity_input)
     pres_list = parse_input(pressure_input)
     data_dict = create_data_dict(temp_list, hum_list, pres_list)
-    process_measurements("temperature", data_dict, thresholdTemp)
-    process_measurements("humidity", data_dict, thresholdHum)
-    process_measurements("pressure", data_dict, thresholdPres)
-
+    process_measurements(title, data_dict, threshold)
+    
 
 if __name__ == "__main__":
     main()

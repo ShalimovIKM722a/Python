@@ -1,45 +1,29 @@
 # stats_module.py
 # Модуль із підпрограмами для статистичної обробки показників
-
 # виконати імпорт модулів, які викорстовуються, наприклад:
 import statistics
 
 def get_average(data_dict):
-    temperatureAverage = sum(data_dict["temperature"].values()) / len(data_dict)
-    humidityAverage = sum(data_dict["humidity"].values()) / len(data_dict)
-    pressureAverage = sum(data_dict["pressure"].values()) / len(data_dict)
-    return temperatureAverage, humidityAverage, pressureAverage
+    average = sum(data_dict) / len(data_dict)
+    return average
 
-     
-def get_min(data_dict):
-    temperatureMin = min(data_dict["temperature"].values()) 
-    humidityMin = min(data_dict["humidity"].values())
-    pressureMin = min(data_dict["pressure"].values())
-    return temperatureMin, humidityMin, pressureMin
-
-
+def get_min(data_dict,title):
+    minimum = min(data_dict)
+    return minimum
 
 def get_max(data_dict):
-    temperatureMax = max(data_dict["temperature"].values()) 
-    humidityMax = max(data_dict["humidity"].values())
-    pressureMax = max(data_dict["pressure"].values())
-    return temperatureMax, humidityMax, pressureMax
-
+    maximum = max(data_dict) 
+    return maximum
 
 def get_median(data_dict):
-    temperatureMedian = statistics.median(data_dict["temperature"].values()) 
-    humidityMedian = statistics.median(data_dict["humidity"].values())
-    pressureMedian = statistics.median(data_dict["pressure"].values())
-    return temperatureMedian, humidityMedian, pressureMedian
+    median = statistics.median(data_dict) 
+    return median
 
 def find_jumps(data_dict, threshold):
-    jumps = {"temperature": [], "humidity": [], "pressure": []}
-    for key in data_dict:
-        values = list(data_dict[key].values())
-        for i in range(len(values) - 1):
-            if abs(values[i+1] - values[i]) > threshold:
-                jumps[key].append((i, values[i], values[i+1]))
-
+    jumps = {"category": [], "value 1": [], "value2": []}
+    for i in range(1, data_dict):
+        if abs(data_dict[i+1] - data_dict[i]) > threshold:
+            jumps[i].append((i, data_dict[i], data_dict[i+1]))
     return jumps
 
 def show_table(data_dict, title):
