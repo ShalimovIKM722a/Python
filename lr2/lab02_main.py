@@ -51,7 +51,7 @@ def main():
     temperature_input = input("Введіть показники температури (через пробіл): ")
     humidity_input = input("Введіть показники вологості (через пробіл): ")
     pressure_input = input("Введіть показники тиску (через пробіл): ")
-    title = input("Введіть")
+    title = input("Введіть назву набору показників: ")
     temp_list = parse_input(temperature_input)
     hum_list = parse_input(humidity_input)
     pres_list = parse_input(pressure_input)
