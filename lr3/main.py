@@ -19,9 +19,6 @@ def parse_arguments():
     Отримує назву файлу (позиційний аргумент) та опції порогів.
     """
     parser = argparse.ArgumentParser(description="Аналіз даних сенсорів з CSV файлу.")
-    
-    # Додаємо аргумент filename прямо сюди. 
-    # nargs="?" означає, що цей аргумент необов'язковий.
     parser.add_argument("filename", nargs="?", help="Шлях до CSV файлу")
     
     parser.add_argument("-t", "--temp", type=float, help="Поріг для температури")
@@ -58,16 +55,12 @@ def read_config(filename):
     general_settings = {}
 
     try:
-        # tomllib вимагає відкриття файлу у бінарному режимі "rb"
         with open(filename, "rb") as f:
             config_data = tomllib.load(f)
-
-        # Розбираємо завантажений словник
         for section, content in config_data.items():
             if section == "General":
                 general_settings = content
             else:
-                # У TOML "stats" вже є списком, сплітіння не потрібне!
                 stats_settings[section] = content.get("stats", [])
                 
         return general_settings, stats_settings
@@ -106,28 +99,20 @@ def get_current_thresholds(args):
     return thresholds
 
 def main():
-    # 1. Спочатку парсимо аргументи командного рядка!
     args = parse_arguments()
 
-    # 2. Зчитування налаштувань з файлу
     general_conf, stats_conf = read_config("config.toml")
-    
-    # 3. Визначення фінального імені файлу
-    # args.filename береться з argparse
+   
     csv_file_path = get_filename(args.filename, general_conf.get("filename"))
     print(f"Використовується файл даних: {csv_file_path}")
-
-    # 4. Визначення актуальних порогів
     current_thresholds = get_current_thresholds(args)
 
-    # 5. Зчитування даних
     data = read_csv(csv_file_path)
     if data is None:
         return
     
     results = {}
 
-    # 6. Обробка кожного параметра
     for param, values_dict in data.items():
         if not values_dict:
             continue
@@ -136,10 +121,8 @@ def main():
         values = list(values_dict.values())
         results[param] = {}
 
-        # Виведення таблиці
         su.print_table(param, values_dict)
 
-        # Виконання розрахунків (Використовуємо stats_conf, а не config!)
         if param in stats_conf:
             for stat in stats_conf[param]:
                 if stat == "average":
@@ -151,10 +134,9 @@ def main():
                 elif stat == "median":
                     results[param]["median"] = su.get_median(values)
                 elif stat == "jumps":
-                    # Використовуємо оновлені пороги current_thresholds
                     results[param]["jumps"] = su.detect_jumps(values, timestamps, current_thresholds.get(param, 0))
             
-            # Виведення статистики
+            
             su.print_stats(param, results[param])
 
     # 7. Збереження результатів у JSON
