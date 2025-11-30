@@ -1,0 +1,15 @@
+{
+    "temperature": {
+        "min": 14.7,
+        "max": 24.4,
+        "jumps": []
+    },
+    "humidity": {
+        "average": 53.86,
+        "median": 51.55
+    },
+    "pressure": {
+        "jumps": [],
+        "max": 100810.0
+    }
+}
